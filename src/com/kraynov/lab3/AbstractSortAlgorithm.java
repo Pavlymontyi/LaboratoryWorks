@@ -1,10 +1,11 @@
 package com.kraynov.lab3;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public abstract class AbstractSortAlgorithm {
 
-    protected boolean detailedLogging = true;
+    public static boolean detailedLogging = true;
 
     public void printArray(long[] arr){
         for (int i=0; i<arr.length; i++){
@@ -13,16 +14,34 @@ public abstract class AbstractSortAlgorithm {
         System.out.println();
     }
 
-    public void sort(long[] arr){
-        printArray(arr);
+    /**
+     * Print source array, do sorting, print result array.
+     * @param arr - array to be sorted
+     * @return time (in millis) for which sorting was done
+     */
+    public long sort(long[] arr){
+        long[] src = Arrays.copyOf(arr, arr.length);
+
+        if (detailedLogging) printArray(src);
 
         long start = Calendar.getInstance().getTimeInMillis();
-        doSort(arr);
-        System.out.printf("Time: %d\n", Calendar.getInstance().getTimeInMillis()-start);
+        src = doSort(src);
+        long result = Calendar.getInstance().getTimeInMillis()-start;
 
-        printArray(arr);
-        System.out.println();
+        if (detailedLogging) printArray(src);
+        System.out.printf("Time: %d\n\n", result);
+
+        return result;
     }
+
+    protected void swap(long[] arr, int i, int j){
+        long r = arr[i]; arr[i] = arr[j]; arr[j] = r;
+    }
+
+    public abstract long[] doSort(long[] arr);
+
+    /******************/
+
 
     public static long[] generateRandom(int n){
         long[] arr = new long[n];
@@ -32,9 +51,11 @@ public abstract class AbstractSortAlgorithm {
         return arr;
     }
 
-    protected void swap(long[] arr, int i, int j){
-        long r = arr[i]; arr[i] = arr[j]; arr[j] = r;
-    }
+    public enum SortingAlgorithm{InsertionSort, MergeSort}
 
-    public abstract void doSort(long[] arr);
+    public static AbstractSortAlgorithm getInstance(String name){
+        if (SortingAlgorithm.InsertionSort.name().equalsIgnoreCase(name)) return new InsertionSort();
+        if (SortingAlgorithm.MergeSort.name().equalsIgnoreCase(name)) return new MergeSort();
+        return new InsertionSort();
+    }
 }

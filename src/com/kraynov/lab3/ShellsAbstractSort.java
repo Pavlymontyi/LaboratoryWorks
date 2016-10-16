@@ -3,8 +3,9 @@ package com.kraynov.lab3;
 
 public class ShellsAbstractSort extends InsertionSort {
 
+
     @Override
-    public void doSort(long[] arr) {
+    public long[] doSort(long[] arr) {
 //        int d = arr.length - 3* (Integer.highestOneBit(arr.length) >> 1);
 //        int d1 = Integer.highestOneBit(arr.length); // closed low power of 2
 //        d1 << 1
@@ -24,6 +25,7 @@ public class ShellsAbstractSort extends InsertionSort {
             d = d >> 1;
         }
 
-        super.doSort(arr);
+        arr = super.doSort(arr); // ?????
+        return arr;
     }
 }
